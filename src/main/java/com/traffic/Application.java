@@ -1,4 +1,4 @@
-package com.traffic.subway;
+package com.traffic;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
