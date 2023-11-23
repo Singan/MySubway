@@ -1,6 +1,6 @@
-package com.traffic.entity;
+package com.traffic.member.entity;
 
-import com.traffic.dto.enums.TrafficType;
+import com.traffic.common.enums.TrafficType;
 import lombok.Getter;
 
 import javax.persistence.*;

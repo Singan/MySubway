@@ -1,4 +1,4 @@
-package com.traffic.dto.enums;
+package com.traffic.common.enums;
 
 public enum TrafficType {
     Bus,Subway

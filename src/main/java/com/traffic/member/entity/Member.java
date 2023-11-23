@@ -1,4 +1,4 @@
-package com.traffic.entity;
+package com.traffic.member.entity;
 
 import lombok.Getter;
 
