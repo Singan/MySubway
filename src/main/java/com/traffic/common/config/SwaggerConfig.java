@@ -1,4 +1,4 @@
-package com.traffic.config;
+package com.traffic.common.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
