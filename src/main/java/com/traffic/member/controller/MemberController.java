@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("")
+@RestController
 @RequestMapping("/1.0/member")
 @Tag(name = "MemberController", description = "회원 서비스")
 @RequiredArgsConstructor
