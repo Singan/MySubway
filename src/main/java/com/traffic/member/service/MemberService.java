@@ -20,22 +20,25 @@ public class MemberService {
     private final NaverUtil naverUtil;
 
     public String getNaverAuthorizeUrl() throws
-            URISyntaxException,
-            MalformedURLException,
+
             UnsupportedEncodingException {
 
         String secret = naverUtil.getSecret();
         String clientId = naverUtil.getId();
         String redirectUrl = naverUtil.getRedirectUri();
+        try {
 
-        UriComponents uriComponents = UriComponentsBuilder
-                .fromUriString("https://nid.naver.com/oauth2.0/authorize")
-                .queryParam("response_type", "code")
-                .queryParam("client_id", clientId)
-                .queryParam("redirect_uri", URLEncoder.encode(redirectUrl, "UTF-8"))
-                .queryParam("state", URLEncoder.encode("1234", "UTF-8"))
-                .build();
-
-        return uriComponents.toString();
+            UriComponents uriComponents = UriComponentsBuilder
+                    .fromUriString("https://nid.naver.com/oauth2.0/authorize")
+                    .queryParam("response_type", "code")
+                    .queryParam("client_id", clientId)
+                    .queryParam("redirect_uri", URLEncoder.encode(redirectUrl, "UTF-8"))
+                    .queryParam("state", URLEncoder.encode("1234", "UTF-8"))
+                    .build();
+            return uriComponents.toString();
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
     }
 }
