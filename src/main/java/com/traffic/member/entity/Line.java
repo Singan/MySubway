@@ -16,8 +16,11 @@ public class Line {
     @JoinColumn(name = "member_no",nullable = false)
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Member member;
+
     private String depart;
+
     private Time rideTime;
+
     @Enumerated(EnumType.STRING)
     private WeekType rideWeek;
 }

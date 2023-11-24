@@ -1,36 +1,28 @@
 package com.traffic.member.dto.res;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-
+@EqualsAndHashCode()
 @Data
 @ToString
-public class SignupResEntity {
+public class SigninResEntity {
 
     @Schema(example = "6003caf6-187d-4000-ac47-0e333f38f6c8", description = "access_token")
-    @JsonProperty("access_token")
-    private String accessToken;
+    private String access_token;
 
     @Schema(example = "bearer", description = "token_type")
-    @JsonProperty("token_type")
-    private String tokenType;
+    private String token_type;
 
     @Schema(example = "7537aa29-fe8c-43fe-9e4a-ddff315bb942", description = "refresh_token")
-    @JsonProperty("refresh_token")
-    private String refreshToken;
+    private String refresh_token;
 
     @Schema(example = "86399", description = "expires_in")
-    @JsonProperty("expires_in")
-    private String expiresIn;
-
-    @Schema(example = "86399", description = "refresh_token_expires_in")
-    @JsonProperty("refresh_token_expires_in")
-    private String refreshTokenExpiresIn;
+    private Integer expires_in;
 
     @Schema(example = "user", description = "scope")
-    @JsonProperty("scope")
     private String scope;
 }
