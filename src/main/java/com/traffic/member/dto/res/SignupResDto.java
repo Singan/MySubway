@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class SignupResEntity {
+public class SignupResDto {
 
     @Schema(example = "6003caf6-187d-4000-ac47-0e333f38f6c8", description = "access_token")
     @JsonProperty("access_token")

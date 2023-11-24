@@ -1,6 +1,10 @@
 package com.traffic.member.service;
 
 import com.traffic.member.api.NaverUtil;
+import com.traffic.member.api.OAuthInfoResponse;
+import com.traffic.member.api.kakao.KakaoApiClient;
+import com.traffic.member.entity.Member;
+import com.traffic.member.entity.TokenEntity;
 import com.traffic.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     private final NaverUtil naverUtil;
+
+    private final KakaoApiClient apiClient;
 
     public String getNaverAuthorizeUrl() throws
 
@@ -40,5 +46,15 @@ public class MemberService {
             System.out.println(e);
             throw e;
         }
+    }
+
+
+    private String newMember(OAuthInfoResponse oAuthInfoResponse) {
+        Member member = Member.builder()
+                .email(oAuthInfoResponse.getEmail())
+                .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
+                .build();
+
+        return memberRepository.save(member).getMemberEmail();
     }
 }

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 @EqualsAndHashCode()
 @Data
 @ToString
-public class SigninReqEntity  {
+public class SigninReqDto {
 
     @Schema(example = "100", description = "로그인유형 - 100: 카카오 로그인, 200: 네이버 로그인", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty

@@ -9,7 +9,7 @@ import lombok.ToString;
 @EqualsAndHashCode()
 @Data
 @ToString
-public class SigninResEntity {
+public class SigninResDto {
 
     @Schema(example = "6003caf6-187d-4000-ac47-0e333f38f6c8", description = "access_token")
     private String access_token;

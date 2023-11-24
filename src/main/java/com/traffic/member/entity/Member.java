@@ -1,6 +1,7 @@
 package com.traffic.member.entity;
 
 import com.traffic.common.enums.OAuthProvider;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer memberNo;
@@ -25,5 +27,11 @@ public class Member {
     private LocalDate memberRegDt;
 
     private OAuthProvider oAuthProvider;
+
+    @Builder
+    public Member(String email, OAuthProvider oAuthProvider) {
+        this.memberEmail = email;
+        this.oAuthProvider = oAuthProvider;
+    }
 
 }
