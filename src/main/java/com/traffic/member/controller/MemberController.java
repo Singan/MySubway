@@ -1,6 +1,7 @@
 package com.traffic.member.controller;
 
 import com.traffic.member.api.NaverUtil;
+import com.traffic.member.entity.TokenEntity;
 import com.traffic.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import okhttp3.Response;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,4 +49,5 @@ public class MemberController {
 
         System.out.println(request.getMethod());
     }
+
 }
