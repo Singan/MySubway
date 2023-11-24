@@ -1,8 +1,7 @@
 package com.traffic.member.entity;
 
 import com.traffic.common.enums.OAuthProvider;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,6 +9,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Member {
 
     @Id
