@@ -72,6 +72,7 @@ public class SecurityConfig   {
                 // [STEP2] 토큰을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.GET,"/member/*").permitAll()
+                .antMatchers(HttpMethod.POST,"/member/naver").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // CorsFilter
