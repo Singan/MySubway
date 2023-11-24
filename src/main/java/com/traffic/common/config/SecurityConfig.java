@@ -1,5 +1,6 @@
 package com.traffic.common.config;
 
+import com.traffic.common.filter.CustomCorsFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -13,8 +14,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +37,7 @@ public class SecurityConfig   {
             "/swagger-ui",
             "/swagger-ui.html",
             "/api-docs",
-            "/v3/api-docs/**","/1.0/member/naver"
+            "/v3/api-docs/**"
     };
 
 
@@ -68,20 +71,11 @@ public class SecurityConfig   {
                 .cors().and()
                 // [STEP2] 토큰을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용
                 .authorizeHttpRequests()
-                .antMatchers(HttpMethod.GET,"/category", "/product","/ws/**","/product/*","/bid").permitAll()
-                .antMatchers(HttpMethod.POST, "/member").permitAll()
-                .antMatchers(HttpMethod.POST, "/member/login").permitAll()
+                .antMatchers(HttpMethod.GET,"/member/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
-
-                // [STEP3] Spring Security JWT Filter Load
-                .addFilterBefore(new OncePerRequestFilter() {
-                    @Override
-                    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-                        filterChain.doFilter(request,response);
-                    }
-                }, UsernamePasswordAuthenticationFilter.class)
-
+                // CorsFilter
+                .addFilterBefore(new CustomCorsFilter(), CorsFilter.class)
                 // [STEP4] Session 기반의 인증기반을 사용하지 않고 추후 JWT를 이용하여서 인증 예정
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
