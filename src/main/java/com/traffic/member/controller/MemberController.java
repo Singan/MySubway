@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
@@ -37,17 +38,14 @@ public class MemberController {
     })
     @ResponseBody
     @GetMapping(value = "signIn", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void signIn() throws Exception{
-        System.out.println(memberService.getNaverAuthorizeUrl());
+    public void signIn()  {
     }
     @GetMapping("/naver")
-    public void naverLoginTest(HttpServletResponse response) throws Exception{
-        response.sendRedirect(memberService.getNaverAuthorizeUrl());
+    public String naverLoginUrl(HttpServletResponse response) throws Exception{
+        return memberService.getNaverAuthorizeUrl();
     }
-    @PostMapping("/naver")
-    public void naverLoginTestPost(HttpServletRequest request) throws Exception{
-
-        System.out.println(request.getMethod());
+    @GetMapping("/oauth")
+    public void naverAccessToken(@RequestParam String code) throws IOException {
+        memberService.getAccessToken(code);
     }
-
 }
