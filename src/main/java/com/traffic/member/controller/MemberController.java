@@ -3,6 +3,7 @@ package com.traffic.member.controller;
 import com.traffic.member.api.NaverUtil;
 import com.traffic.member.api.kakao.KakaoApiClient;
 import com.traffic.member.dto.req.SigninReqDto;
+import com.traffic.member.dto.req.SignupReqDto;
 import com.traffic.member.dto.res.SigninResDto;
 import com.traffic.member.dto.res.SignupResDto;
 import com.traffic.member.entity.TokenEntity;
@@ -49,9 +50,9 @@ public class MemberController {
     }
 
     @Operation(summary = "카카오 로그인")
-    @GetMapping(value = "/kakao")
-    public String signin() throws Exception {
-        return memberService.getKakaoLogin();
+    @PostMapping("/kakao")
+    public ResponseEntity<TokenEntity> loginKakao(@RequestBody SignupReqDto reqDto) throws Exception {
+        return ResponseEntity.ok(memberService.login(reqDto));
     }
 
     @Operation(summary = "카카오 토큰", security = {@SecurityRequirement(name = "basicAuth")})

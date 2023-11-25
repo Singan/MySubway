@@ -78,11 +78,10 @@ public class KakaoApiClient  {
             if(response.body() != null) {
                 String body = response.body().string();
                 TokenEntity tokenEntity = new Gson().fromJson(body, TokenEntity.class);
-                resEntity.setAccess_token(tokenEntity.getAccess_token());
-                resEntity.setToken_type(tokenEntity.getToken_type());
-                resEntity.setRefresh_token(tokenEntity.getRefresh_token());
-                resEntity.setExpires_in(tokenEntity.getExpires_in());
-                resEntity.setScope(tokenEntity.getScope());
+                resEntity.setAccess_token(tokenEntity.getAccessToken());
+                resEntity.setToken_type(tokenEntity.getTokenType());
+                resEntity.setRefresh_token(tokenEntity.getRefreshToken());
+                resEntity.setExpires_in(tokenEntity.getExpiresIn());
             } else {
                 resEntity.setCode("500");
                 resEntity.setMessage("서버 장애.");
