@@ -13,7 +13,6 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 public class SignupReqDto {
 
-    // @Schema << swagger에서 보여주는거 지우면 안됨 + 예시로 적어둔거 바뀔수 있음
     @Schema(example = "test@test.com", description = "이메일", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty
     private String email;

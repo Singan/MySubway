@@ -23,13 +23,17 @@ import java.util.Base64;
 
 @ConstructorBinding
 public class NaverUtil {
+
     private final String id;
     private final String secret;
     private final String redirectUri;
+
     public String getNaverAuthorizeUrl() throws UnsupportedEncodingException {
+
         String secret = getSecret();
         String clientId = getId();
         String redirectUrl = getRedirectUri();
+
         try {
             UriComponents uriComponents = UriComponentsBuilder
                     .fromUriString("https://nid.naver.com/oauth2.0/authorize")

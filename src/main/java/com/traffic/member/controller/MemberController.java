@@ -36,7 +36,7 @@ public class MemberController {
             @Parameter(name = "signIn", example = "id, pw", description = "내용 설명", required = true)
     })
     @ResponseBody
-    @GetMapping(value = "signIn", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "signin", produces = MediaType.APPLICATION_JSON_VALUE)
     public void signIn()  {
     }
     @Operation(summary = "네이버 로그인")
