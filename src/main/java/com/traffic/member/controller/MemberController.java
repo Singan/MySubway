@@ -3,6 +3,7 @@ package com.traffic.member.controller;
 import com.traffic.member.api.NaverUtil;
 import com.traffic.member.api.kakao.KakaoApiClient;
 import com.traffic.member.dto.req.SigninReqDto;
+import com.traffic.member.dto.req.SignupReqDto;
 import com.traffic.member.dto.res.SigninResDto;
 import com.traffic.member.dto.res.SignupResDto;
 import com.traffic.member.entity.TokenEntity;
@@ -37,7 +38,8 @@ public class MemberController {
     })
     @ResponseBody
     @GetMapping(value = "signin", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void signIn()  {
+    public void signIn(@RequestBody SignupReqDto reqDto)  {
+
     }
     @Operation(summary = "네이버 로그인")
     @GetMapping(value = "/naver")

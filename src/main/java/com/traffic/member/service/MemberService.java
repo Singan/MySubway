@@ -29,7 +29,9 @@ public class MemberService {
             return naverUtil.getNaverAuthorizeUrl();
     }
     public TokenEntity getAccessToken(String code) throws IOException {
-        return naverUtil.getNaverAccessToken(code);
+        TokenEntity tokenEntity = naverUtil.getNaverAccessToken(code);
+        naverUtil.getNaverMemberProfile(tokenEntity.getAccess_token());
+        return tokenEntity;
     }
 
     public String getKakaoLogin() throws UnsupportedEncodingException {

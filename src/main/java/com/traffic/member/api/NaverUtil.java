@@ -73,5 +73,23 @@ public class NaverUtil {
         }
         return null;
     }
+    public TokenEntity getNaverMemberProfile(String token) throws IOException {
 
+        RequestBody requestBody = new FormBody.Builder()
+                .build();
+        Request.Builder builder = new Request.Builder().url("https://openapi.naver.com/v1/nid/me")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Authorization", "Bearer "+token)
+                .post(requestBody);
+        Request request = builder.build();
+        OkHttpClient client = new OkHttpClient();
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            if(response.body() != null) {
+                String body = response.body().string();
+                System.out.println(body);
+            }
+        }
+        return null;
+    }
 }
