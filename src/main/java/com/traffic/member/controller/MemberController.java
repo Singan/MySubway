@@ -39,10 +39,12 @@ public class MemberController {
     @GetMapping(value = "signIn", produces = MediaType.APPLICATION_JSON_VALUE)
     public void signIn()  {
     }
-    @GetMapping("/naver")
-    public String naverLoginUrl(HttpServletResponse response) throws Exception{
+    @Operation(summary = "네이버 로그인")
+    @GetMapping(value = "/naver")
+    public String naverLoginUrl() throws Exception{
         return memberService.getNaverAuthorizeUrl();
     }
+    @Operation(summary = "네이버 리다이렉트 URL")
     @GetMapping("/oauth")
     public void naverAccessToken(@RequestParam String code) throws IOException {
         memberService.getAccessToken(code);
