@@ -66,22 +66,16 @@ public class SecurityConfig   {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // [STEP1] 서버에 인증정보를 저장하지 않기에 csrf를 사용하지 않는다.
                 .csrf().disable()
                 .cors().and()
-                // [STEP2] 토큰을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.GET,"/member/*").permitAll()
                 .antMatchers(HttpMethod.POST,"/member/naver").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                // CorsFilter
                 .addFilterBefore(new CustomCorsFilter(), CorsFilter.class)
-                // [STEP4] Session 기반의 인증기반을 사용하지 않고 추후 JWT를 이용하여서 인증 예정
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
                 .and()
-                // [STEP5] form 기반의 로그인에 대해 비 활성화하며 커스텀으로 구성한 필터를 사용한다.
                 .formLogin().disable();
 
         return http.build();
