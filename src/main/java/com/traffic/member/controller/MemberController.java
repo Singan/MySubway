@@ -29,11 +29,19 @@ public class MemberController {
             @Parameter(name = "signIn", example = "id, pw", description = "내용 설명", required = true)
     })
     @ResponseBody
-    @GetMapping(value = "signin", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
     public void signIn(@RequestBody SignupReqDto reqDto)  {
-
+        
     }
-
+    @Operation(summary = "회원 로그인", security = {@SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "basicAuth")})
+    @Parameters({
+            @Parameter(name = "signUp", example = "id, pw", description = "회원 가입", required = true)
+    })
+    @ResponseBody
+    @PostMapping(value = "sign-up", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void signUp(@RequestBody SignupReqDto reqDto)  {
+        memberService.newMember(reqDto);
+    }
     @Operation(summary = "로그인 타입에 따라 SNS 등 분기처리")
     @GetMapping("/sign_in/{type}")
     public ResponseEntity<String> loginKakao(@PathVariable(name = "type") String type) throws Exception {
@@ -51,7 +59,7 @@ public class MemberController {
         return responseEntity;
     }
 
-    @Operation(summary = "SNS 로그 토큰", security = {@SecurityRequirement(name = "basicAuth")})
+    @Operation(summary = "SNS 로그인 토큰", security = {@SecurityRequirement(name = "basicAuth")})
     @ResponseBody
     @GetMapping(value = "/oauth/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void kakaoToken(@PathVariable(name = "type") String type, @RequestParam String code) throws Exception {

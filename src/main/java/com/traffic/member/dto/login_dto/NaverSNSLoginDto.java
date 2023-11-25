@@ -7,7 +7,8 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConfigurationProperties(prefix = "oauth.naver.client")
 @ConstructorBinding
 public class NaverSNSLoginDto extends SNSLoginDto {
-    public NaverSNSLoginDto(String id, String secret, String redirectUri, String authorization, String token) {
-        super(id, secret, redirectUri, authorization, token);
+
+    public NaverSNSLoginDto(String id, String secret, String redirectUri, String authorization, String token, String profile) {
+        super(id, secret, redirectUri, authorization, token, profile);
     }
 }

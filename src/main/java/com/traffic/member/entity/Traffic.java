@@ -18,5 +18,5 @@ public class Traffic {
     @Enumerated
     private TrafficType trafficType;
 
-    private Long TrafficNumber; // 버스 몇번 혹은 지하철 몇 호선
+    private Long trafficNumber; // 버스 몇번 혹은 지하철 몇 호선
 }

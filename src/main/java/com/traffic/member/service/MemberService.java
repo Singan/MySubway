@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,26 +19,25 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AuthTokensGenerator authTokensGenerator;
-    private String findOrCreateMember(SignupReqDto reqDto) {
-        return memberRepository.findByMemberEmail(reqDto.getEmail())
-                .map(Member::getMemberEmail)
-                .orElseGet(() -> newMember(reqDto));
+    private boolean findOrCreateMember(SignupReqDto reqDto) {
+        return memberRepository.existsByMemberEmail(reqDto.getEmail());
     }
-
-    private String newMember(SignupReqDto reqDto) {
+    private Optional<Member> findByMember(SignupReqDto reqDto) {
+        return memberRepository.findByMemberEmail(reqDto.getEmail());
+    }
+    public String newMember(SignupReqDto reqDto) {
         Member member = Member.builder()
                 .memberEmail(reqDto.getEmail())
                 .memberPw(reqDto.getPassword())
                 .memberNm(reqDto.getName())
                 .memberType(reqDto.getMemberType())
                 .build();
-
         return memberRepository.save(member).getMemberEmail();
     }
 
     public TokenEntity login(SignupReqDto reqDto) {
-        String memberId = findOrCreateMember(reqDto);
-        return authTokensGenerator.generate(memberId);
+        Member member = findByMember(reqDto).orElseThrow(() -> new IllegalArgumentException("no such data"));
+        return authTokensGenerator.generate(member.getMemberId());
     }
 
 }

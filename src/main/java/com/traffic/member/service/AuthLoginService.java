@@ -3,12 +3,14 @@ package com.traffic.member.service;
 import com.google.gson.Gson;
 import com.traffic.member.dto.login_dto.SNSLoginDto;
 import com.traffic.member.dto.res.SigninResDto;
+import com.traffic.member.entity.TokenEntity;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Base64;
@@ -19,7 +21,7 @@ import java.util.Base64;
 public class AuthLoginService {
 
     private final String GRANT_TYPE = "authorization_code";
-
+    private final MemberService memberService;
 
     public String getAuthorization(SNSLoginDto snsLoginDto) throws UnsupportedEncodingException {
         try {
@@ -36,7 +38,7 @@ public class AuthLoginService {
         }
     }
 
-    public SigninResDto getAccessToken(SNSLoginDto snsLoginDto,String code) throws Exception {
+    public SigninResDto getAccessToken(SNSLoginDto snsLoginDto,String code) throws IOException {
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new FormBody.Builder()
                 .add("grant_type","authorization_code")
@@ -60,7 +62,25 @@ public class AuthLoginService {
                 SigninResDto resEntity = new Gson().fromJson(body, SigninResDto.class);
                 resEntity.setCode("100");
                 resEntity.setMessage("정상 처리 되었습니다.");
+                getNaverMemberProfile(snsLoginDto,resEntity.getAccess_token());
                 return resEntity;
+            }
+        }
+        return null;
+    }
+    public String getNaverMemberProfile(SNSLoginDto snsLoginDto,String token) throws IOException {
+        RequestBody requestBody = new FormBody.Builder()
+                .build();
+        Request.Builder builder = new Request.Builder().url(snsLoginDto.getProfile())
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Authorization", "Bearer "+token)
+                .post(requestBody);
+        Request request = builder.build();
+        OkHttpClient client = new OkHttpClient();
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            if(response.body() != null) {
+                String body = response.body().string();
             }
         }
         return null;
