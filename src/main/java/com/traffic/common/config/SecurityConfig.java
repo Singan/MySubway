@@ -69,7 +69,7 @@ public class SecurityConfig   {
                 .csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests()
-                .antMatchers(HttpMethod.GET,"/member/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/member/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/member/naver").permitAll()
                 .anyRequest().authenticated()
                 .and()

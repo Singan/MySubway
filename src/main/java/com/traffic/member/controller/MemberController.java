@@ -1,12 +1,9 @@
 package com.traffic.member.controller;
 
-import com.traffic.member.api.NaverUtil;
-import com.traffic.member.api.kakao.KakaoApiClient;
-import com.traffic.member.dto.req.SigninReqDto;
+import com.traffic.member.service.AuthLoginService;
+import com.traffic.member.dto.login_dto.KakaoSNSLoginDto;
+import com.traffic.member.dto.login_dto.NaverSNSLoginDto;
 import com.traffic.member.dto.req.SignupReqDto;
-import com.traffic.member.dto.res.SigninResDto;
-import com.traffic.member.dto.res.SignupResDto;
-import com.traffic.member.entity.TokenEntity;
 import com.traffic.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,16 +11,9 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import okhttp3.Response;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 @RestController
 @RequestMapping("/member")
@@ -31,7 +21,9 @@ import java.net.http.HttpResponse;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-
+    private final AuthLoginService authLoginService;
+    private final NaverSNSLoginDto naverSNSLoginDto;
+    private final KakaoSNSLoginDto kakaoSNSLoginDto;
     @Operation(summary = "회원 로그인", security = {@SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "basicAuth")})
     @Parameters({
             @Parameter(name = "signIn", example = "id, pw", description = "내용 설명", required = true)
@@ -41,30 +33,37 @@ public class MemberController {
     public void signIn(@RequestBody SignupReqDto reqDto)  {
 
     }
-    @Operation(summary = "네이버 로그인")
-    @GetMapping(value = "/naver")
-    public String naverLoginUrl() throws Exception{
-        return memberService.getNaverAuthorizeUrl();
-    }
-    @Operation(summary = "네이버 리다이렉트 URL")
-    @GetMapping("/oauth")
-    public void naverAccessToken(@RequestParam String code) throws IOException {
-        memberService.getAccessToken(code);
+
+    @Operation(summary = "로그인 타입에 따라 SNS 등 분기처리")
+    @GetMapping("/sign_in/{type}")
+    public ResponseEntity<String> loginKakao(@PathVariable(name = "type") String type) throws Exception {
+        ResponseEntity responseEntity = null;
+        System.out.println("Sign 실행");
+        switch (type){
+            case "naver":
+                responseEntity = ResponseEntity.ok(authLoginService.getAuthorization(naverSNSLoginDto));
+                break;
+            case "kakao":
+                responseEntity = ResponseEntity.ok(authLoginService.getAuthorization(kakaoSNSLoginDto));
+                break;
+            default:
+        }
+        return responseEntity;
     }
 
-    @Operation(summary = "카카오 로그인")
-    @PostMapping("/kakao")
-    public ResponseEntity<TokenEntity> loginKakao(@RequestBody SignupReqDto reqDto) throws Exception {
-        return ResponseEntity.ok(memberService.login(reqDto));
-    }
-
-    @Operation(summary = "카카오 토큰", security = {@SecurityRequirement(name = "basicAuth")})
+    @Operation(summary = "SNS 로그 토큰", security = {@SecurityRequirement(name = "basicAuth")})
     @ResponseBody
-    @GetMapping(value = "/oauth/kakao", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void kakaoToken(@RequestBody SigninReqDto reqEntity, @RequestParam String code) throws Exception {
-         memberService.kakaoLogin(reqEntity, code);
+    @GetMapping(value = "/oauth/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void kakaoToken(@PathVariable(name = "type") String type, @RequestParam String code) throws Exception {
+        System.out.println(type);
+        switch (type){
+            case "naver":
+                ResponseEntity.ok(authLoginService.getAccessToken(naverSNSLoginDto,code));
+                break;
+            case "kakao":
+                ResponseEntity.ok(authLoginService.getAccessToken(kakaoSNSLoginDto,code));
+                break;
+            default:
+        }
     }
-
-
-
 }

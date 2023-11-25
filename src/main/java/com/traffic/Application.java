@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-@ConfigurationPropertiesScan("com.traffic.member.api")
+@ConfigurationPropertiesScan("com.traffic.member.dto.login_dto")
 
 public class Application {
 

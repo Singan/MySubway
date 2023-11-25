@@ -16,7 +16,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer memberNo;
+    private String memberId;
 
     private String memberEmail;
 
@@ -26,20 +26,8 @@ public class Member {
 
     private String memberType;
 
-    private String mobileNo;
-
     private String memberStatus;
 
     private LocalDate memberRegDt;
-
-
-    @Builder
-    public Member(String email, String memberPw, String memberNm, String memberType, String mobileNo) {
-        this.memberEmail = email;
-        this.memberPw = memberPw;
-        this.memberNm = memberNm;
-        this.memberType = memberType;
-        this.mobileNo = mobileNo;
-    }
 
 }
