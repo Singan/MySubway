@@ -29,7 +29,7 @@ public class MemberService {
     }
     public TokenEntity getAccessToken(String code) throws IOException {
         TokenEntity tokenEntity = naverUtil.getNaverAccessToken(code);
-        naverUtil.getNaverMemberProfile(tokenEntity.getAccess_token());
+        naverUtil.getNaverMemberProfile(tokenEntity.getAccessToken());
         return tokenEntity;
     }
 
@@ -42,7 +42,7 @@ public class MemberService {
     }
 
     private String findOrCreateMember(SignupReqDto reqDto) {
-        return memberRepository.findByEmail(reqDto.getEmail())
+        return memberRepository.findByMemberEmail(reqDto.getEmail())
                 .map(Member::getMemberEmail)
                 .orElseGet(() -> newMember(reqDto));
     }
