@@ -2,8 +2,6 @@ package com.traffic.member.api.kakao;
 
 import com.google.gson.Gson;
 import com.traffic.common.enums.OAuthProvider;
-import com.traffic.member.api.OAuthApiClient;
-import com.traffic.member.api.OAuthInfoResponse;
 import com.traffic.member.dto.req.SigninReqDto;
 import com.traffic.member.dto.res.SigninResDto;
 import com.traffic.member.entity.TokenEntity;
@@ -12,45 +10,58 @@ import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
-public class KakaoApiClient implements OAuthApiClient {
+public class KakaoApiClient  {
 
     private static final String GRANT_TYPE = "authorization_code";
 
-//    @Value("${oauth.kakao.url.auth}")
-//    private String authUrl;
-
-//    @Value("${oauth.kakao.url.api}")
-//    private String apiUrl;
-
     @Value("${oauth.kakao.client-id}")
     private String clientId;
-
     @Value("${oauth.kakao.token.url}")
     private String tokenUrl;
+    @Value("${oauth.kakao.redirect.url}")
+    private String redirectUrl;
+    @Value("${oauth.kakao.client.secret}")
+    private String clientSecret;
+    @Value("${oauth.kakao.authorization.url}")
+    private String authorization;
 
-
-    @Override
-    public OAuthProvider oAuthProvider() {
-        return OAuthProvider.KAKAO;
+    public String getKakaoAuthorizeUrl() throws UnsupportedEncodingException {
+        try {
+            UriComponents uriComponents = UriComponentsBuilder
+                    .fromUriString(authorization)
+                    .queryParam("client_id", clientId)
+                    .queryParam("redirect_uri", URLEncoder.encode(redirectUrl, "UTF-8"))
+                    .queryParam("response_type", "code")
+                    .build();
+            return uriComponents.toString();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    @Override
-    public SigninResDto requestAccessToken(SigninReqDto reqEntity) throws Exception {
+    public SigninResDto callSignin(SigninReqDto reqEntity, String code) throws Exception {
 
         SigninResDto resEntity = new SigninResDto();
+        resEntity.setCode("100");
+        resEntity.setMessage("정상 처리 되었습니다.");
+
         OkHttpClient client = new OkHttpClient();
 
         RequestBody requestBody = new FormBody.Builder()
-                .add("username", reqEntity.getEmail())
-                .add("password", StringUtils.equals("100", reqEntity.getSigninType()) ? reqEntity.getPassword() : reqEntity.getSnsIdentifier())
-                .add("signin_type", reqEntity.getSigninType())
-                .add("scope", "user")
-                .add("grant_type", "password")
+                .add("grant_type", GRANT_TYPE)
+                .add("client_id", clientId)
+                .add("client_secret", clientSecret)
+                .add("redirect_url", redirectUrl)
+                .add("code", code)
                 .build();
 
         // Post 객체 생성
@@ -73,19 +84,14 @@ public class KakaoApiClient implements OAuthApiClient {
                 resEntity.setExpires_in(tokenEntity.getExpires_in());
                 resEntity.setScope(tokenEntity.getScope());
             } else {
-                throw new Exception("Auth server response body null");
+                resEntity.setCode("500");
+                resEntity.setMessage("서버 장애.");
             }
         }
 
         return resEntity;
     }
 
-    @Override
-    public OAuthInfoResponse requestOauthInfo(String accessToken) {
-//        String url = apiUrl + "/v1/user/me";
 
-
-        return null;
-    }
 
 }

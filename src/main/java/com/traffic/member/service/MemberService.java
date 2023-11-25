@@ -1,8 +1,9 @@
 package com.traffic.member.service;
 
 import com.traffic.member.api.NaverUtil;
-import com.traffic.member.api.OAuthInfoResponse;
 import com.traffic.member.api.kakao.KakaoApiClient;
+import com.traffic.member.dto.req.SigninReqDto;
+import com.traffic.member.dto.res.SigninResDto;
 import com.traffic.member.entity.Member;
 import com.traffic.member.entity.TokenEntity;
 import com.traffic.member.repository.MemberRepository;
@@ -13,15 +14,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepository memberRepository;
 
+    private final MemberRepository memberRepository;
     private final NaverUtil naverUtil;
 
     private final KakaoApiClient apiClient;
@@ -33,13 +32,12 @@ public class MemberService {
         return naverUtil.getNaverAccessToken(code);
     }
 
-
-    private String newMember(OAuthInfoResponse oAuthInfoResponse) {
-        Member member = Member.builder()
-                .email(oAuthInfoResponse.getEmail())
-                .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
-                .build();
-
-        return memberRepository.save(member).getMemberEmail();
+    public String getKakaoLogin() throws UnsupportedEncodingException {
+        return apiClient.getKakaoAuthorizeUrl();
     }
+
+    public SigninResDto kakaoLogin(SigninReqDto reqEntity, String code) throws Exception {
+          return apiClient.callSignin(reqEntity, code);
+    }
+
 }

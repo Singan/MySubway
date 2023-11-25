@@ -31,9 +31,8 @@ public class Member {
     private OAuthProvider oAuthProvider;
 
     @Builder
-    public Member(String email, OAuthProvider oAuthProvider) {
+    public Member(String email) {
         this.memberEmail = email;
-        this.oAuthProvider = oAuthProvider;
     }
 
 }

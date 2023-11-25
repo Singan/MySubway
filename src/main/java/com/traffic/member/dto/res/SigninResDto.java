@@ -1,15 +1,16 @@
 package com.traffic.member.dto.res;
 
 
+import com.traffic.common.entity.ResEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@EqualsAndHashCode()
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ToString
-public class SigninResDto {
+public class SigninResDto extends ResEntity {
 
     @Schema(example = "6003caf6-187d-4000-ac47-0e333f38f6c8", description = "access_token")
     private String access_token;
