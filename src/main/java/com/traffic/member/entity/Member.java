@@ -22,17 +22,24 @@ public class Member {
 
     private String memberPw;
 
+    private String memberNm;
+
     private String memberType;
+
+    private String mobileNo;
 
     private String memberStatus;
 
     private LocalDate memberRegDt;
 
-    private OAuthProvider oAuthProvider;
 
     @Builder
-    public Member(String email) {
+    public Member(String email, String memberPw, String memberNm, String memberType, String mobileNo) {
         this.memberEmail = email;
+        this.memberPw = memberPw;
+        this.memberNm = memberNm;
+        this.memberType = memberType;
+        this.mobileNo = mobileNo;
     }
 
 }

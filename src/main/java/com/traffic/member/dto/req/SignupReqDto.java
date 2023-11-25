@@ -26,6 +26,8 @@ public class SignupReqDto {
     @Schema(example = "01012341234", description = "핸드폰번호", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String mobileNo;
 
+    @Schema(example = "100", description = "회원가입 유형 - 100: 카카오 로그인, 200: 네이버 로그인", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String memberType;
 
 
 }

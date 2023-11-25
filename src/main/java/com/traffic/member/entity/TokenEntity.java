@@ -1,20 +1,26 @@
 package com.traffic.member.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class TokenEntity {
 
-    private String access_token;
+    private String accessToken;
 
-    private String refresh_token;
+    private String refreshToken;
 
-    private String token_type;
+    private String tokenType;
 
-    private Integer expires_in;
+    private Long expiresIn;
 
-    private String scope;
+    public static TokenEntity of(String accessToken, String refreshToken, String tokenType, Long expiresIn) {
+        return new TokenEntity(accessToken, refreshToken, tokenType, expiresIn);
+    }
 
 }

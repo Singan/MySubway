@@ -22,7 +22,7 @@ public class SigninResDto extends ResEntity {
     private String refresh_token;
 
     @Schema(example = "86399", description = "expires_in")
-    private Integer expires_in;
+    private Long expires_in;
 
     @Schema(example = "user", description = "scope")
     private String scope;
