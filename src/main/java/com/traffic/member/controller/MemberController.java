@@ -1,5 +1,8 @@
 package com.traffic.member.controller;
 
+import com.traffic.member.dto.login_dto.SNSLoginDto;
+import com.traffic.member.dto.res.SigninResDto;
+import com.traffic.member.entity.TokenEntity;
 import com.traffic.member.service.AuthLoginService;
 import com.traffic.member.dto.login_dto.KakaoSNSLoginDto;
 import com.traffic.member.dto.login_dto.NaverSNSLoginDto;
@@ -20,28 +23,34 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "MemberController", description = "회원 서비스")
 @RequiredArgsConstructor
 public class MemberController {
+
     private final MemberService memberService;
     private final AuthLoginService authLoginService;
     private final NaverSNSLoginDto naverSNSLoginDto;
     private final KakaoSNSLoginDto kakaoSNSLoginDto;
+
     @Operation(summary = "회원 로그인", security = {@SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "basicAuth")})
     @Parameters({
             @Parameter(name = "signIn", example = "id, pw", description = "내용 설명", required = true)
     })
     @ResponseBody
     @PostMapping(value = "sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void signIn(@RequestBody SignupReqDto reqDto)  {
-        
+    public  ResponseEntity<TokenEntity> signIn(@RequestBody SignupReqDto reqDto)  {
+        TokenEntity token = memberService.login(reqDto);
+        return ResponseEntity.ok(token);
     }
+
     @Operation(summary = "회원 로그인", security = {@SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "basicAuth")})
     @Parameters({
             @Parameter(name = "signUp", example = "id, pw", description = "회원 가입", required = true)
     })
     @ResponseBody
-    @PostMapping(value = "sign-up", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void signUp(@RequestBody SignupReqDto reqDto)  {
-        memberService.newMember(reqDto);
+    @PostMapping("/signup")
+    public ResponseEntity<String> signUp(@RequestBody SignupReqDto reqDto) {
+        String userEmail = memberService.newMember(reqDto);
+        return ResponseEntity.ok("사용자 이메일: " + userEmail);
     }
+
     @Operation(summary = "로그인 타입에 따라 SNS 등 분기처리")
     @GetMapping("/sign_in/{type}")
     public ResponseEntity<String> loginKakao(@PathVariable(name = "type") String type) throws Exception {
@@ -62,16 +71,28 @@ public class MemberController {
     @Operation(summary = "SNS 로그인 토큰", security = {@SecurityRequirement(name = "basicAuth")})
     @ResponseBody
     @GetMapping(value = "/oauth/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void kakaoToken(@PathVariable(name = "type") String type, @RequestParam String code) throws Exception {
-        System.out.println(type);
+    public ResponseEntity<TokenEntity> kakaoToken(@PathVariable(name = "type") String type, @RequestParam String code) throws Exception {
         switch (type){
             case "naver":
-                ResponseEntity.ok(authLoginService.getAccessToken(naverSNSLoginDto,code));
-                break;
+                SigninResDto naverTokenResponse = authLoginService.getAccessToken(naverSNSLoginDto, code);
+                SignupReqDto signupReqDto = authLoginService.getNaverMemberProfile(naverSNSLoginDto, naverTokenResponse.getAccess_token());
+                signupReqDto.setId(signupReqDto.getId());
+
+                if (!memberService.memberExists(signupReqDto.getId())) {
+                    TokenEntity naverToken = memberService.newMemberAndLogin(signupReqDto);
+                    return ResponseEntity.ok(naverToken);
+                } else {
+                    TokenEntity naverToken = memberService.login(signupReqDto);
+                    return ResponseEntity.ok(naverToken);
+                }
+
             case "kakao":
                 ResponseEntity.ok(authLoginService.getAccessToken(kakaoSNSLoginDto,code));
                 break;
             default:
+                break;
         }
+
+        return ResponseEntity.badRequest().build();
     }
 }

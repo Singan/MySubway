@@ -24,6 +24,4 @@ public class SigninResDto extends ResEntity {
     @Schema(example = "86399", description = "expires_in")
     private Long expires_in;
 
-    @Schema(example = "user", description = "scope")
-    private String scope;
 }

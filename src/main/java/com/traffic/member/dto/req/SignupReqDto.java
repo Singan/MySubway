@@ -13,6 +13,10 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 public class SignupReqDto {
 
+    @Schema(example = "id", description = "회원 고유 ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotEmpty
+    private String id;
+
     @Schema(example = "test@test.com", description = "이메일", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty
     private String email;

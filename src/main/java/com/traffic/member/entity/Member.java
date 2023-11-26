@@ -26,8 +26,11 @@ public class Member {
 
     private String memberType;
 
+    private String mobileNo;
+
     private String memberStatus;
 
     private LocalDate memberRegDt;
+
 
 }
