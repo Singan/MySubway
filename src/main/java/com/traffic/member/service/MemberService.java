@@ -43,6 +43,7 @@ public class MemberService {
 
     public TokenEntity newMemberAndLogin(SignupReqDto reqDto) {
         Member member = Member.builder()
+                .memberId(reqDto.getId())
                 .memberEmail(reqDto.getEmail())
                 .memberPw(reqDto.getPassword())
                 .memberNm(reqDto.getName())

@@ -7,33 +7,24 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class SignupResDto extends ResEntity {
 
-    @Schema(example = "6003caf6-187d-4000-ac47-0e333f38f6c8", description = "access_token")
-    @JsonProperty("access_token")
-    private String accessToken;
+    @Schema(example = "id", description = "회원 고유 ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotEmpty
+    private String id;
 
-    @Schema(example = "bearer", description = "token_type")
-    @JsonProperty("token_type")
-    private String tokenType;
+    @Schema(example = "test@test.com", description = "이메일", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String email;
 
-    @Schema(example = "7537aa29-fe8c-43fe-9e4a-ddff315bb942", description = "refresh_token")
-    @JsonProperty("refresh_token")
-    private String refreshToken;
+    @Schema(example = "테스트", description = "닉네임", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String nickname;
 
-    @Schema(example = "86399", description = "expires_in")
-    @JsonProperty("expires_in")
-    private String expiresIn;
-
-    @Schema(example = "86399", description = "refresh_token_expires_in")
-    @JsonProperty("refresh_token_expires_in")
-    private String refreshTokenExpiresIn;
-
-    @Schema(example = "user", description = "scope")
-    @JsonProperty("scope")
-    private String scope;
+    @Schema(example = "01012341234", description = "핸드폰번호 (본인인증 및 SNS 리턴값)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String mobileNo;
 }

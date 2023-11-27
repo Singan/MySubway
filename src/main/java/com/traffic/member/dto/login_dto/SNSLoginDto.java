@@ -16,6 +16,8 @@ public class SNSLoginDto {
 
     private final String authorization;
 
+    private final String scope;
+
     private final String token ;
 
     private final String profile;

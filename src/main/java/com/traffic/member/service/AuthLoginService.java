@@ -53,7 +53,7 @@ public class AuthLoginService {
                     .add("code", code)
                     .add("state", "1234")
                     .build();
-            String authorization = "Basic " + Base64.getEncoder().encodeToString("duotone:duotone".getBytes());
+            String authorization = "Basic " + Base64.getEncoder().encodeToString("subway:subway".getBytes());
             Request.Builder builder = new Request.Builder().url(tokenUrl)
                     .addHeader("Content-Type", "application/x-www-form-urlencoded")
                     .addHeader("Authorization", authorization)
@@ -92,5 +92,36 @@ public class AuthLoginService {
             }
         }
         return null;
+    }
+
+    public SignupReqDto getKakaoMemberProfile(SNSLoginDto snsLoginDto, String token) throws Exception {
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody requestBody = new FormBody.Builder()
+                .build();
+        Request.Builder builder = new Request.Builder()
+                .url("https://kapi.kakao.com/v2/user/me")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Authorization", "Bearer " + token)
+                .post(requestBody);
+
+        Request request = builder.build();
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            if(response.body() != null) {
+                String body = response.body().string();
+                SignupReqDto signupReqDto = mapResponseToSignupReqDto(body);
+
+                return signupReqDto;
+            }
+        }
+        return null;
+    }
+
+    private SignupReqDto mapResponseToSignupReqDto(String responseBody) {
+        Gson gson = new Gson();
+        SignupReqDto signupReqDto = gson.fromJson(responseBody, SignupReqDto.class);
+
+        return signupReqDto;
     }
 }
