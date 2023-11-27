@@ -53,7 +53,7 @@ public class AuthLoginService {
                     .add("code", code)
                     .add("state", "1234")
                     .build();
-            String authorization = "Basic " + Base64.getEncoder().encodeToString("duotone:duotone".getBytes());
+            String authorization = "Basic " + Base64.getEncoder().encodeToString("subway:subway".getBytes());
             Request.Builder builder = new Request.Builder().url(tokenUrl)
                     .addHeader("Content-Type", "application/x-www-form-urlencoded")
                     .addHeader("Authorization", authorization)
@@ -77,6 +77,7 @@ public class AuthLoginService {
     }
     public SignupReqDto getNaverMemberProfile(SNSLoginDto snsLoginDto, String token) throws IOException {
         RequestBody requestBody = new FormBody.Builder()
+                .add("scope", snsLoginDto.getScope())
                 .build();
         Request.Builder builder = new Request.Builder().url(snsLoginDto.getProfile())
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")

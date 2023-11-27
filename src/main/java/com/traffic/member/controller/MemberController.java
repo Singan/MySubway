@@ -29,7 +29,7 @@ public class MemberController {
     private final NaverSNSLoginDto naverSNSLoginDto;
     private final KakaoSNSLoginDto kakaoSNSLoginDto;
 
-    @Operation(summary = "회원 로그인", security = {@SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "basicAuth")})
+    @Operation(summary = "회원 로그인", security = {@SecurityRequirement(name = "bearerAuth")})
     @Parameters({
             @Parameter(name = "signIn", example = "id, pw", description = "내용 설명", required = true)
     })
@@ -76,7 +76,8 @@ public class MemberController {
             case "naver":
                 SigninResDto naverTokenResponse = authLoginService.getAccessToken(naverSNSLoginDto, code);
                 SignupReqDto signupReqDto = authLoginService.getNaverMemberProfile(naverSNSLoginDto, naverTokenResponse.getAccess_token());
-                signupReqDto.setId(signupReqDto.getId());
+                signupReqDto.setMemberType(type);
+                signupReqDto.setPassword("");
 
                 if (!memberService.memberExists(signupReqDto.getId())) {
                     TokenEntity naverToken = memberService.newMemberAndLogin(signupReqDto);
@@ -87,8 +88,19 @@ public class MemberController {
                 }
 
             case "kakao":
-                ResponseEntity.ok(authLoginService.getAccessToken(kakaoSNSLoginDto,code));
-                break;
+                SigninResDto kakaoTokenResponse = authLoginService.getAccessToken(kakaoSNSLoginDto, code);
+                SignupReqDto kakakoReqDto = authLoginService.getNaverMemberProfile(kakaoSNSLoginDto, kakaoTokenResponse.getAccess_token());
+                kakakoReqDto.setMemberType(type);
+                kakakoReqDto.setPassword("");
+
+                if (!memberService.memberExists(kakakoReqDto.getId())) {
+                    TokenEntity kakaoToken = memberService.newMemberAndLogin(kakakoReqDto);
+                    return ResponseEntity.ok(kakaoToken);
+                } else {
+                    TokenEntity kakaoToken = memberService.login(kakakoReqDto);
+                    return ResponseEntity.ok(kakaoToken);
+                }
+
             default:
                 break;
         }
