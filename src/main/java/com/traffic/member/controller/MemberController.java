@@ -89,7 +89,7 @@ public class MemberController {
 
             case "kakao":
                 SigninResDto kakaoTokenResponse = authLoginService.getAccessToken(kakaoSNSLoginDto, code);
-                SignupReqDto kakakoReqDto = authLoginService.getNaverMemberProfile(kakaoSNSLoginDto, kakaoTokenResponse.getAccess_token());
+                SignupReqDto kakakoReqDto = authLoginService.getKakaoMemberProfile(kakaoSNSLoginDto, kakaoTokenResponse.getAccess_token());
                 kakakoReqDto.setMemberType(type);
                 kakakoReqDto.setPassword("");
 

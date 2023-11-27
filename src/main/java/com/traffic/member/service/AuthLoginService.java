@@ -77,7 +77,6 @@ public class AuthLoginService {
     }
     public SignupReqDto getNaverMemberProfile(SNSLoginDto snsLoginDto, String token) throws IOException {
         RequestBody requestBody = new FormBody.Builder()
-                .add("scope", snsLoginDto.getScope())
                 .build();
         Request.Builder builder = new Request.Builder().url(snsLoginDto.getProfile())
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
@@ -93,5 +92,36 @@ public class AuthLoginService {
             }
         }
         return null;
+    }
+
+    public SignupReqDto getKakaoMemberProfile(SNSLoginDto snsLoginDto, String token) throws Exception {
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody requestBody = new FormBody.Builder()
+                .build();
+        Request.Builder builder = new Request.Builder()
+                .url("https://kapi.kakao.com/v2/user/me")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Authorization", "Bearer " + token)
+                .post(requestBody);
+
+        Request request = builder.build();
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            if(response.body() != null) {
+                String body = response.body().string();
+                SignupReqDto signupReqDto = mapResponseToSignupReqDto(body);
+
+                return signupReqDto;
+            }
+        }
+        return null;
+    }
+
+    private SignupReqDto mapResponseToSignupReqDto(String responseBody) {
+        Gson gson = new Gson();
+        SignupReqDto signupReqDto = gson.fromJson(responseBody, SignupReqDto.class);
+
+        return signupReqDto;
     }
 }
