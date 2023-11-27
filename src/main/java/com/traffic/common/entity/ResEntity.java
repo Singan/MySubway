@@ -7,7 +7,7 @@ import lombok.Data;
 public class ResEntity {
 
     @Schema(example = "100", description = "결과코드 100: SUCCESS, 그외 실패")
-    private String code = "100";
+    private String resultCode = "100";
 
     @Schema(example = "성공", description = "결과 메세지")
     private String message = "성공";

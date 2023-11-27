@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConstructorBinding
 public class KakaoSNSLoginDto extends SNSLoginDto {
 
+
     public KakaoSNSLoginDto(String id, String secret, String redirectUri, String authorization, String token, String profile) {
         super(id, secret, redirectUri, authorization, token, profile);
     }

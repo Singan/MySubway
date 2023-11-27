@@ -3,6 +3,7 @@ package com.traffic.member.service;
 import com.traffic.common.config.AuthTokensGenerator;
 
 import com.traffic.member.dto.req.SignupReqDto;
+import com.traffic.member.dto.res.OauthResDto;
 import com.traffic.member.entity.Member;
 import com.traffic.member.entity.TokenEntity;
 import com.traffic.member.repository.MemberRepository;
@@ -19,9 +20,9 @@ public class MemberService {
     private final AuthTokensGenerator authTokensGenerator;
 
 
-    public TokenEntity login(SignupReqDto reqDto) {
-        String memberId = findByMember(reqDto);
-        return authTokensGenerator.generate(memberId);
+    public TokenEntity login(OauthResDto reqDto) {
+        //String memberId = findByMember();
+        return null;
     }
 
     public String newMember(SignupReqDto reqDto) {
@@ -41,16 +42,16 @@ public class MemberService {
                 .orElseGet(() -> newMember(reqDto));
     }
 
-    public TokenEntity newMemberAndLogin(SignupReqDto reqDto) {
+    public TokenEntity newMemberAndLogin(OauthResDto reqDto) {
         Member member = Member.builder()
-                .memberId(reqDto.getId())
-                .memberEmail(reqDto.getEmail())
-                .memberPw(reqDto.getPassword())
-                .memberNm(reqDto.getName())
-                .memberType(reqDto.getMemberType())
+//                .memberId(reqDto.getId())
+//                .memberEmail(reqDto.getEmail())
+//                .memberPw(reqDto.getPassword())
+//                .memberNm(reqDto.getName())
+//                .memberType(reqDto.getMemberType())
                 .build();
 
-        memberRepository.save(member);
+//        memberRepository.save(member);
 
         return authTokensGenerator.generate(member.getMemberEmail());
     }

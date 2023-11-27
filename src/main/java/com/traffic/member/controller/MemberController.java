@@ -1,6 +1,7 @@
 package com.traffic.member.controller;
 
 import com.traffic.member.dto.login_dto.SNSLoginDto;
+import com.traffic.member.dto.res.OauthResDto;
 import com.traffic.member.dto.res.SigninResDto;
 import com.traffic.member.entity.TokenEntity;
 import com.traffic.member.service.AuthLoginService;
@@ -36,8 +37,9 @@ public class MemberController {
     @ResponseBody
     @PostMapping(value = "sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
     public  ResponseEntity<TokenEntity> signIn(@RequestBody SignupReqDto reqDto)  {
-        TokenEntity token = memberService.login(reqDto);
-        return ResponseEntity.ok(token);
+//        TokenEntity token = memberService.login(reqDto);
+//        return ResponseEntity.ok(token);
+        return null;
     }
 
     @Operation(summary = "회원 로그인", security = {@SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "basicAuth")})
@@ -72,39 +74,27 @@ public class MemberController {
     @ResponseBody
     @GetMapping(value = "/oauth/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenEntity> kakaoToken(@PathVariable(name = "type") String type, @RequestParam String code) throws Exception {
+        SigninResDto oauthToken = null;
+        OauthResDto oauthResDto = null;
         switch (type){
             case "naver":
-                SigninResDto naverTokenResponse = authLoginService.getAccessToken(naverSNSLoginDto, code);
-                SignupReqDto signupReqDto = authLoginService.getNaverMemberProfile(naverSNSLoginDto, naverTokenResponse.getAccess_token());
-                signupReqDto.setMemberType(type);
-                signupReqDto.setPassword("");
-
-                if (!memberService.memberExists(signupReqDto.getId())) {
-                    TokenEntity naverToken = memberService.newMemberAndLogin(signupReqDto);
-                    return ResponseEntity.ok(naverToken);
-                } else {
-                    TokenEntity naverToken = memberService.login(signupReqDto);
-                    return ResponseEntity.ok(naverToken);
-                }
-
+                oauthToken = authLoginService.getAccessToken(naverSNSLoginDto, code);
+                oauthResDto = authLoginService.getProfile(naverSNSLoginDto, oauthToken.getAccess_token());
+                break;
             case "kakao":
-                SigninResDto kakaoTokenResponse = authLoginService.getAccessToken(kakaoSNSLoginDto, code);
-                SignupReqDto kakakoReqDto = authLoginService.getKakaoMemberProfile(kakaoSNSLoginDto, kakaoTokenResponse.getAccess_token());
-                kakakoReqDto.setMemberType(type);
-                kakakoReqDto.setPassword("");
-
-                if (!memberService.memberExists(kakakoReqDto.getId())) {
-                    TokenEntity kakaoToken = memberService.newMemberAndLogin(kakakoReqDto);
-                    return ResponseEntity.ok(kakaoToken);
-                } else {
-                    TokenEntity kakaoToken = memberService.login(kakakoReqDto);
-                    return ResponseEntity.ok(kakaoToken);
-                }
-
+                oauthToken= authLoginService.getAccessToken(kakaoSNSLoginDto, code);
+                oauthResDto = authLoginService.getProfile(kakaoSNSLoginDto, oauthToken.getAccess_token());
+                break;
             default:
                 break;
         }
-
-        return ResponseEntity.badRequest().build();
+        if (!memberService.memberExists(oauthResDto.getId())) {
+            TokenEntity naverToken = memberService.newMemberAndLogin(oauthResDto);
+            return ResponseEntity.ok(naverToken);
+        } else {
+            TokenEntity naverToken = memberService.login(oauthResDto);
+            return ResponseEntity.ok(naverToken);
+        }
+//        return ResponseEntity.badRequest().build();
     }
 }

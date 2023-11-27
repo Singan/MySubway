@@ -1,8 +1,11 @@
 package com.traffic.member.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.traffic.member.dto.login_dto.SNSLoginDto;
 import com.traffic.member.dto.req.SignupReqDto;
+import com.traffic.member.dto.res.NaverProfileDto;
+import com.traffic.member.dto.res.OauthResDto;
 import com.traffic.member.dto.res.SigninResDto;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
@@ -12,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.Base64;
 
@@ -66,8 +70,9 @@ public class AuthLoginService {
                 if (response.body() != null) {
                     String body = response.body().string();
                     SigninResDto resEntity = new Gson().fromJson(body, SigninResDto.class);
-                    resEntity.setCode("100");
+                    //resEntity.setCode("100");
                     resEntity.setMessage("정상 처리 되었습니다.");
+                    System.out.println(body);
                     // 추가 작업 수행
                     return resEntity;
                 }
@@ -75,7 +80,7 @@ public class AuthLoginService {
         }
         return null;
     }
-    public SignupReqDto getNaverMemberProfile(SNSLoginDto snsLoginDto, String token) throws IOException {
+    public OauthResDto getProfile(SNSLoginDto snsLoginDto, String token) throws IOException {
         RequestBody requestBody = new FormBody.Builder()
                 .build();
         Request.Builder builder = new Request.Builder().url(snsLoginDto.getProfile())
@@ -88,7 +93,11 @@ public class AuthLoginService {
         if (response.isSuccessful()) {
             if(response.body() != null) {
                 String body = response.body().string();
-                return new Gson().fromJson(body, SignupReqDto.class);
+                System.out.println(body);
+                OauthResDto n = new Gson().fromJson(body, OauthResDto.class);
+                System.out.println("Oauth"+n);
+
+                return new Gson().fromJson(body, OauthResDto.class);
             }
         }
         return null;

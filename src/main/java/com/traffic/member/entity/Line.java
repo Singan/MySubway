@@ -17,9 +17,9 @@ public class Line {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long LineNo;
 
-    @JoinColumn(name = "member_id",nullable = false)
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private Member member;
+//    @JoinColumn(name = "member_id",nullable = false)
+//    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+//    private Member member;
 
     private String depart;
 
