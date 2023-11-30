@@ -7,6 +7,7 @@ import com.traffic.member.dto.req.SignupReqDto;
 import com.traffic.member.dto.res.NaverProfileDto;
 import com.traffic.member.dto.res.OauthResDto;
 import com.traffic.member.dto.res.SigninResDto;
+import com.traffic.member.entity.TokenEntity;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.Base64;
+import java.util.Objects;
 
 
 @RequiredArgsConstructor
@@ -37,6 +39,7 @@ public class AuthLoginService {
                         .queryParam("redirect_uri", URLEncoder.encode(snsLoginDto.getRedirectUri(), "UTF-8"))
                         .queryParam("response_type", "code")
                         .queryParam("state", URLEncoder.encode("1234", "UTF-8"))
+                        .queryParam("scope", "account_email")
                         .build();
                 return uriComponents.toString();
             }
@@ -49,7 +52,7 @@ public class AuthLoginService {
     public SigninResDto getAccessToken(SNSLoginDto snsLoginDto, String code) throws IOException {
         OkHttpClient client = new OkHttpClient();
         String tokenUrl = snsLoginDto.getToken(); // 또는 snsLoginDto.getProfile(); 등 사용하는 메서드에 따라 적절히 수정
-        if (tokenUrl != null) {
+
             RequestBody requestBody = new FormBody.Builder()
                     .add("grant_type", "authorization_code")
                     .add("client_id", snsLoginDto.getId())
@@ -65,19 +68,25 @@ public class AuthLoginService {
             Request request = builder.build();
 
             Response response = client.newCall(request).execute();
+        System.out.println("Request: " + request);
+        System.out.println("Response code: " + response.code());
+
             if (response.isSuccessful()) {
-                // 응답 Body
                 if (response.body() != null) {
-                    String body = response.body().string();
-                    SigninResDto resEntity = new Gson().fromJson(body, SigninResDto.class);
-                    //resEntity.setCode("100");
-                    resEntity.setMessage("정상 처리 되었습니다.");
-                    System.out.println(body);
-                    // 추가 작업 수행
-                    return resEntity;
+                    SigninResDto signinResDto = new SigninResDto();
+                    String body = Objects.requireNonNull(response.body()).string();
+                    TokenEntity token = new Gson().fromJson(body, TokenEntity.class);
+                    signinResDto.setAccess_token(token.getAccess_token());
+                    signinResDto.setToken_type(token.getToken_type());
+                    signinResDto.setRefresh_token(token.getRefresh_token());
+                    signinResDto.setExpires_in(token.getExpires_in());
+
+                    signinResDto.setMessage("정상 처리 되었습니다.");
+                    System.out.println("1234" + signinResDto);
+                    return signinResDto;
                 }
             }
-        }
+
         return null;
     }
     public OauthResDto getProfile(SNSLoginDto snsLoginDto, String token) throws IOException {
@@ -93,11 +102,10 @@ public class AuthLoginService {
         if (response.isSuccessful()) {
             if(response.body() != null) {
                 String body = response.body().string();
-                System.out.println(body);
-                OauthResDto n = new Gson().fromJson(body, OauthResDto.class);
-                System.out.println("Oauth"+n);
+                OauthResDto oauthResDto = new Gson().fromJson(body, OauthResDto.class);
 
-                return new Gson().fromJson(body, OauthResDto.class);
+
+                return oauthResDto;
             }
         }
         return null;

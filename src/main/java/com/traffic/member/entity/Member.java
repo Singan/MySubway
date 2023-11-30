@@ -16,7 +16,7 @@ public class Member {
 
     @Id
     @GeneratedValue
-    private String memberId;
+    private Long memberId;
 
     private String memberEmail;
 

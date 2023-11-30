@@ -13,4 +13,10 @@ import java.lang.reflect.Field;
 public class NaverProfileDto{
 
     private String id;
+
+    private String email;
+
+    private String nickname;
+
+
 }

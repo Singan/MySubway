@@ -88,7 +88,7 @@ public class MemberController {
             default:
                 break;
         }
-        if (!memberService.memberExists(oauthResDto.getId())) {
+        if (!memberService.memberExists(oauthResDto.getKakao_account().getEmail())) {
             TokenEntity naverToken = memberService.newMemberAndLogin(oauthResDto);
             return ResponseEntity.ok(naverToken);
         } else {

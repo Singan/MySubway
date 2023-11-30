@@ -16,12 +16,12 @@ import lombok.ToString;
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 
 public class TokenEntity {
-    private String accessToken;
-    private String refreshToken;
-    private String tokenType;
-    private Long expiresIn;
-    public static TokenEntity of(String accessToken, String refreshToken, String tokenType, Long expiresIn) {
-        return new TokenEntity(accessToken, refreshToken, tokenType, expiresIn);
+    private String access_token;
+    private String refresh_token;
+    private String token_type;
+    private Long expires_in;
+    public static TokenEntity of(String access_token, String refresh_token, String token_type, Long expires_in) {
+        return new TokenEntity(access_token, refresh_token, token_type, expires_in);
     }
 
 }

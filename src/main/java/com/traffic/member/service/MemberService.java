@@ -44,14 +44,14 @@ public class MemberService {
 
     public TokenEntity newMemberAndLogin(OauthResDto reqDto) {
         Member member = Member.builder()
-//                .memberId(reqDto.getId())
-//                .memberEmail(reqDto.getEmail())
-//                .memberPw(reqDto.getPassword())
-//                .memberNm(reqDto.getName())
+                .memberId(reqDto.getId())
+                .memberEmail(reqDto.getKakao_account().getEmail())
+                .memberPw("")
+                .memberNm(reqDto.getProperties().getNickname())
 //                .memberType(reqDto.getMemberType())
                 .build();
 
-//        memberRepository.save(member);
+        memberRepository.save(member);
 
         return authTokensGenerator.generate(member.getMemberEmail());
     }

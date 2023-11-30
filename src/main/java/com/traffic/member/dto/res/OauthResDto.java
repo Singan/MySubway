@@ -1,15 +1,34 @@
 package com.traffic.member.dto.res;
 
+import com.google.gson.Gson;
 import com.traffic.common.entity.ResEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
+@Setter
 public class OauthResDto extends ResEntity {
 
-    private String id;
+    private Long id;
+
+    private KakaoAccount kakao_account;
+
+    private Properties properties;
+
     private NaverProfileDto response;
+
+
+    @Getter
+    @ToString
+    public static class KakaoAccount {
+        private String email;
+    }
+
+    @Getter
+    @ToString
+    public static class Properties {
+        private String nickname;
+    }
+
+
 }
