@@ -4,12 +4,16 @@ import com.traffic.common.config.AuthTokensGenerator;
 
 import com.traffic.member.dto.req.SignupReqDto;
 import com.traffic.member.dto.res.OauthResDto;
+import com.traffic.member.dto.res.SignupResDto;
 import com.traffic.member.entity.Member;
 import com.traffic.member.entity.TokenEntity;
 import com.traffic.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -25,30 +29,44 @@ public class MemberService {
         return null;
     }
 
-    public String newMember(SignupReqDto reqDto) {
+    public SignupResDto newMember(SignupReqDto reqDto) {
+        SignupResDto resDto = new SignupResDto();
+        resDto.setResultCode("100");
+        resDto.setMessage("정상 처리 되었습니다.");
+
         Member member = Member.builder()
                 .memberEmail(reqDto.getEmail())
-                .memberPw(reqDto.getPassword())
+                .memberPw(new BCryptPasswordEncoder().encode(reqDto.getPassword()))
                 .memberNm(reqDto.getName())
-                .memberType(reqDto.getMemberType())
+                .memberRegDt(LocalDate.now())
+                .memberStatus("100")
+                .memberType("normal")
                 .build();
-        return memberRepository.save(member).getMemberEmail();
-    }
+
+        // 이메일 중복체크
+        if (StringUtils.equals("100", reqDto.getMemberType())) {
+            Optional<Member> checkMember = memberRepository.findByMemberEmail(reqDto.getEmail());
+            if (checkMember.isPresent()) {
+                resDto.setResultCode("200");
+                resDto.setMessage("이미 가입한 회원입니다.");
+            }
+            return resDto;
+        }
 
 
-    private String findByMember(SignupReqDto reqDto) {
-        return memberRepository.findByMemberEmail(reqDto.getEmail())
-                .map(Member::getMemberEmail)
-                .orElseGet(() -> newMember(reqDto));
+        memberRepository.save(member);
+        return resDto;
     }
 
     public TokenEntity newMemberAndLogin(OauthResDto reqDto) {
         Member member = Member.builder()
                 .memberId(reqDto.getId())
-                .memberEmail(reqDto.getKakao_account().getEmail())
+                .memberEmail(reqDto.getEmail())
                 .memberPw("")
-                .memberNm(reqDto.getProperties().getNickname())
-//                .memberType(reqDto.getMemberType())
+                .memberNm(reqDto.getNickname())
+                .memberRegDt(LocalDate.now())
+                .memberStatus("100")
+                .memberType(reqDto.getType())
                 .build();
 
         memberRepository.save(member);

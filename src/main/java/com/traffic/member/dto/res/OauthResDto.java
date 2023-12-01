@@ -11,6 +11,12 @@ public class OauthResDto extends ResEntity {
 
     private Long id;
 
+    private String email;
+
+    private String nickname;
+
+    private String type;
+
     private KakaoAccount kakao_account;
 
     private Properties properties;
@@ -20,7 +26,7 @@ public class OauthResDto extends ResEntity {
 
     @Getter
     @ToString
-    public static class KakaoAccount {
+    public  class KakaoAccount {
         private String email;
     }
 

@@ -3,6 +3,7 @@ package com.traffic.member.dto.req;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @ToString
+@EqualsAndHashCode
 public class SignupReqDto {
 
     @Schema(example = "id", description = "회원 고유 ID", requiredMode = Schema.RequiredMode.REQUIRED)

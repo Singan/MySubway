@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString
-public class SignupResDto extends ResEntity {
+public class SignupResDto extends SigninResDto {
 
     @Schema(example = "id", description = "회원 고유 ID", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty
