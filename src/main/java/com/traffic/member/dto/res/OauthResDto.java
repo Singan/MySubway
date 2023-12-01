@@ -26,7 +26,7 @@ public class OauthResDto extends ResEntity {
 
     @Getter
     @ToString
-    public  class KakaoAccount {
+    public static class KakaoAccount {
         private String email;
     }
 

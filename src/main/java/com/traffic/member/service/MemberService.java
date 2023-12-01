@@ -33,7 +33,7 @@ public class MemberService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encoderPassword = encoder.encode(reqDto.getPassword());
 
-        Member member = memberRepository.findByEmailAndPassword(reqDto.getEmail(), encoderPassword);
+        Member member = memberRepository.findMemberByMemberEmail(reqDto.getEmail());
 
         if (StringUtils.equals("100", reqDto.getMemberType())) {
             if (member != null) {
