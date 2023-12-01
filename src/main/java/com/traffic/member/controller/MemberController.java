@@ -1,5 +1,6 @@
 package com.traffic.member.controller;
 
+import com.traffic.common.config.AuthTokensGenerator;
 import com.traffic.member.dto.login_dto.SNSLoginDto;
 import com.traffic.member.dto.res.OauthResDto;
 import com.traffic.member.dto.res.SigninResDto;
@@ -31,16 +32,16 @@ public class MemberController {
     private final NaverSNSLoginDto naverSNSLoginDto;
     private final KakaoSNSLoginDto kakaoSNSLoginDto;
 
+    private final AuthTokensGenerator authTokensGenerator;
+
     @Operation(summary = "일반 회원 로그인", security = {@SecurityRequirement(name = "bearerAuth")})
     @Parameters({
             @Parameter(name = "signIn", example = "id, pw", description = "내용 설명", required = true)
     })
     @ResponseBody
     @PostMapping(value = "sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
-    public  ResponseEntity<TokenEntity> signIn(@RequestBody SignupReqDto reqDto)  {
-//        TokenEntity token = memberService.login(reqDto);
-//        return ResponseEntity.ok(token);
-        return null;
+    public SigninResDto signIn(@RequestBody SignupReqDto reqDto)  {
+        return memberService.login(reqDto);
     }
 
     @Operation(summary = "일반 회원 가입", security = {@SecurityRequirement(name = "basicAuth")})
@@ -59,7 +60,6 @@ public class MemberController {
     @GetMapping("/sign_in/{type}")
     public ResponseEntity<String> loginKakao(@PathVariable(name = "type") String type) throws Exception {
         ResponseEntity responseEntity = null;
-        System.out.println("Sign 실행");
         switch (type){
             case "naver":
                 responseEntity = ResponseEntity.ok(authLoginService.getAuthorization(naverSNSLoginDto));
@@ -91,7 +91,7 @@ public class MemberController {
                     TokenEntity token = memberService.newMemberAndLogin(oauthResDto);
                     return ResponseEntity.ok(token);
                 } else {
-                    TokenEntity token = memberService.login(oauthResDto);
+                    TokenEntity token = authTokensGenerator.generate(oauthResDto.getResponse().getEmail());
                     return ResponseEntity.ok(token);
                 }
             case "kakao":
@@ -105,7 +105,7 @@ public class MemberController {
                     TokenEntity token = memberService.newMemberAndLogin(oauthResDto);
                     return ResponseEntity.ok(token);
                 } else {
-                    TokenEntity token = memberService.login(oauthResDto);
+                    TokenEntity token = authTokensGenerator.generate(oauthResDto.getKakao_account().getEmail());
                     return ResponseEntity.ok(token);
                 }
             default:

@@ -4,6 +4,7 @@ import com.traffic.common.config.AuthTokensGenerator;
 
 import com.traffic.member.dto.req.SignupReqDto;
 import com.traffic.member.dto.res.OauthResDto;
+import com.traffic.member.dto.res.SigninResDto;
 import com.traffic.member.dto.res.SignupResDto;
 import com.traffic.member.entity.Member;
 import com.traffic.member.entity.TokenEntity;
@@ -24,9 +25,27 @@ public class MemberService {
     private final AuthTokensGenerator authTokensGenerator;
 
 
-    public TokenEntity login(OauthResDto reqDto) {
-        //String memberId = findByMember();
-        return null;
+    public SigninResDto login(SignupReqDto reqDto) {
+        SigninResDto resDto = new SignupResDto();
+        resDto.setResultCode("100");
+        resDto.setMessage("정상 처리 되었습니다.");
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encoderPassword = encoder.encode(reqDto.getPassword());
+
+        Member member = memberRepository.findByEmailAndPassword(reqDto.getEmail(), encoderPassword);
+
+        if (StringUtils.equals("100", reqDto.getMemberType())) {
+            if (member != null) {
+               // 토큰 생성
+
+            } else {
+                resDto.setResultCode("200");
+                resDto.setMessage("로그인 실패");
+            }
+        }
+
+        return resDto;
     }
 
     public SignupResDto newMember(SignupReqDto reqDto) {
@@ -52,7 +71,6 @@ public class MemberService {
             }
             return resDto;
         }
-
 
         memberRepository.save(member);
         return resDto;
